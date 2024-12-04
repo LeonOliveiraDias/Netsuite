@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7861313-EDAD-449F-BC51-566CCD6F24C2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Netsuite</RootNamespace>
+    <AssemblyName>Netsuite</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Connected Services\NetSuiteService\accounting.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\accountingTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\bank.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\bankTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\common.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\commonTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\communication.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\communicationTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\core.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\coreTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\customers.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\customerTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\customization.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\customizationTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\demandPlanning.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\demandPlanningTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\employees.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\employees1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\employeeTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\employeeTypes1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\faults.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\faultTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\fileCabinet.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\fileCabinetTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\financial.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\financialTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\general.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\inventory.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\inventoryTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\marketing.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\marketingTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\messages.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.addListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.addResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncAddListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncDeleteListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncGetListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncInitializeListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.AsyncResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.AsyncStatusResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncUpdateListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.asyncUpsertListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.attachResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.changeEmailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.changePasswordResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.checkAsyncStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.deleteListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.deleteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.detachResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.DocumentInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getAccountGovernanceInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetAccountGovernanceInfoResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getAllResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetAllResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getAsyncResultResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getBudgetExchangeRateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetBudgetExchangeRateResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getCurrencyRateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetCurrencyRateResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getCustomizationIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetCustomizationIdResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getDataCenterUrlsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetDataCenterUrlsResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getDeletedResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetDeletedResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getIntegrationGovernanceInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetIntegrationGovernanceInfoResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getItemAvailabilityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetItemAvailabilityResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getPostingTransactionSummaryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetPostingTransactionSummaryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getSavedSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetSavedSearchResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getSelectValueResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetSelectValueResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.getServerTimeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.GetServerTimeResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.initializeListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.initializeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.ReadResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.ReadResponseList.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.searchMoreWithIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.searchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.SearchResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.SessionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.updateInviteeStatusListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.updateInviteeStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.updateListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.updateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.upsertListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.upsertResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.WriteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\Netsuite.NetSuiteService.WriteResponseList.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\NetSuiteService\netsuite.wsdl" />
+    <None Include="Connected Services\NetSuiteService\purchases.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\purchaseTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\relationships.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\relationshipTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\sales.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\saleTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\scheduling.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\schedulingTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\supplyChain.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\supplyChainTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\support.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\supportTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\website.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NetSuiteService\websiteTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\NetSuiteService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NetSuiteService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NetSuiteService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NetSuiteService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Connected Services\NetSuiteService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="SuiteTalkCourse.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
