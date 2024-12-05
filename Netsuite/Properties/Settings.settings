@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Netsuite_com_netsuite_webservices_NetSuiteService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://td2967825.suitetalk.api.netsuite.com</Value>
+      <Value Profile="(Default)">https://webservices.netsuite.com/services/NetSuitePort_2024_1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

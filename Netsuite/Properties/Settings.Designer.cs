@@ -26,7 +26,7 @@ namespace Netsuite.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://td2967825.suitetalk.api.netsuite.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://webservices.netsuite.com/services/NetSuitePort_2024_1")]
         public string Netsuite_com_netsuite_webservices_NetSuiteService {
             get {
                 return ((string)(this["Netsuite_com_netsuite_webservices_NetSuiteService"]));
