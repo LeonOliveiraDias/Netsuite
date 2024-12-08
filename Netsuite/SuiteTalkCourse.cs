@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Services.Description;
 using Netsuite.com.netsuite.webservices;
 
 
@@ -11,64 +9,45 @@ namespace Netsuite
     class SuiteTalkCourse
     {
         public NetSuiteService _service;
-        private Preferences _preferences;
-        private SearchPreferences _searchPreferences;
-        private static Random random = new Random();
 
         public SuiteTalkCourse() { 
             _service = new NetSuiteService();
 
-            //_service.Url = "https://td2967825.suitetalk.api.netsuite.com/services/NetSuitePort_2024_1";
-
             SetTokenPassport();
-            //SetApplicationInfo();
             SetPreferences();
-            GetEmployee();
         }
-
-
-        private void SetApplicationInfo() {
-            _service.applicationInfo = new ApplicationInfo
-            {
-                applicationId = "4677B53C-A94F-4D39-B028-1B1BBCA84787"
-            };
+        static void Main(string[] args)
+        {
+            SuiteTalkCourse suiteTalkCourse = new SuiteTalkCourse();
+            suiteTalkCourse.GetEmployee();
         }
 
         private void SetTokenPassport() {
 
-            string nonce = GetNonce();
-            Console.WriteLine("Nonce is " + nonce);
-
-            //computing for timestamp
-            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            string timestamp = unixTimestamp.ToString();
-            Console.WriteLine("Timestamp is " + timestamp);
-
-            long convertedtimestamp = Convert.ToInt64(timestamp);
             string compid = "TD2967825";
-            string role = "158";
-            string consumerkey = "6e822fd9cddb3837f325f822bbe2363ff63ee6bac3bb61fe7fea604cd678b975";
-            string token = "2135d208a1d07332343802bb99fe6f79cfeefe911d0eb6aacc1732c51014b5e1";
-            string consumersecret = "956cedc1c5e81249dcdc2415cdec669c9be9ef5270f37fcdfa46a2a1801d4f09";
-            string tokensecret = "d4d9efd37e61aa6c3bff41e413559e8620d654614a4f637f97e94fe8b63223a5";
+            string consumerkey = "35cabf17768c563ed787ccbe1f3986cdecf2cc5c612d94990ff30bccf3ab2053";
+            string token = "9c591c4511d1e42f31c63f3b07c29f53bc9f06e3fe7e78ea5d9c36ccd599669c";
+            string consumersecret = "c7733f772655d2ee6f578df73060599911d6c1e4d85864fa7d5b8dcb6fe355ed";
+            string tokensecret = "219b85004de8fbdcbb5d6f2f2c9b14b0aa5ae311d498e18b407d725458f17276";
 
-            string baseString = string.Concat(compid, "&", consumerkey, "&", token, "&", nonce, "&", timestamp);
-            string key = string.Concat(consumersecret, "&", tokensecret);
+            string nonce = GenerateNonce();
+            long timestamp = GetGmtMinusThreeHours();
 
-            Console.WriteLine("Base String is " + baseString);
-            Console.WriteLine("Signing Key is " + key);
+            string baseString = GetBaseString(compid, consumerkey, token, nonce, timestamp);
+            string key = GetKey(consumersecret, tokensecret);
 
-            string signature = "";
+            string signature = GetRfc2104CompliantSignature(baseString, key);
 
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            byte[] keyByte = encoding.GetBytes(key);
-            byte[] messageBytes = encoding.GetBytes(baseString);
-            using (HMACSHA1 myhmacsha1 = new HMACSHA1(keyByte))
-            {
-                byte[] hashmessage = myhmacsha1.ComputeHash(messageBytes);
-                signature = Convert.ToBase64String(hashmessage);
-            }
-            Console.WriteLine("Computed Signature is " + signature);
+            Console.WriteLine("timestamp String:");
+            Console.WriteLine(timestamp);
+            Console.WriteLine("nonce String:");
+            Console.WriteLine(nonce);
+            Console.WriteLine("Base String:");
+            Console.WriteLine(baseString);
+            Console.WriteLine("Key:");
+            Console.WriteLine(key);
+            Console.WriteLine("Signature:");
+            Console.WriteLine(signature);
 
             TokenPassportSignature sign = new TokenPassportSignature();
             sign.algorithm = "HMAC-SHA256";
@@ -78,11 +57,11 @@ namespace Netsuite
             {
                 consumerKey = consumerkey,
                 token = token,
-                Role = role,
                 account = compid,
-                timestamp = convertedtimestamp,
+                timestamp = timestamp,
                 nonce = nonce,
-                signature = sign
+                signature = sign,
+                Role = "1058"
             };
         }
 
@@ -101,49 +80,50 @@ namespace Netsuite
 
             Console.WriteLine(employeeRef);
 
-            _service.get(employeeRef);
+            ReadResponse response = _service.get(employeeRef);
 
-            Console.WriteLine("After customer get");
+            if (response.status.isSuccess) {
+                Employee employee = (Employee)response.record;
+                Console.WriteLine("Employee Name: " + employee.firstName + " " + employee.lastName);
+                Console.WriteLine("Get success");
+            } 
         }
 
-        static void Main(string[] args)
+        private static string GetBaseString(string account, string consumerKey, string tokenId, string nonce, long timestamp)
         {
-            SuiteTalkCourse suiteTalkCourse = new SuiteTalkCourse();
-
-            suiteTalkCourse.GetEmployee();
-
-
+            return string.Format("{0}&{1}&{2}&{3}&{4}", account, consumerKey, tokenId, nonce, timestamp);
         }
 
-        public static string Base64Encode(string plainText)
+        private static string GetKey(string consumerSecret, string tokenSecret)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
+            return string.Format("{0}&{1}", consumerSecret, tokenSecret);
         }
 
-        public static string GetNonce() {
-            Random res = new Random();
+        private static string GetRfc2104CompliantSignature(string baseString, string key)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            byte[] baseStringBytes = Encoding.UTF8.GetBytes(baseString);
 
-            // String of alphabets  
-            String str = "abcdefghijklmnopqrstuvwxyz";
-            int size = 10;
-
-            // Initializing the empty string 
-            String ran = "";
-
-            for (int i = 0; i < size; i++)
+            using (var hmacsha256 = new HMACSHA256(keyBytes))
             {
-
-                // Selecting a index randomly 
-                int x = res.Next(26);
-
-                // Appending the character at the  
-                // index to the random string. 
-                ran = ran + str[x];
+                var signatureBytes = hmacsha256.ComputeHash(baseStringBytes);
+                return Convert.ToBase64String(signatureBytes);
             }
+        }
 
-            Console.WriteLine("Random String:" + ran);
-            return ran;
+        private static long GetGmtMinusThreeHours()
+        {
+            var now = DateTime.UtcNow;
+            return ((DateTimeOffset)now).ToUnixTimeSeconds();
+        }
+
+        public static string GenerateNonce()
+        {
+            var rng = RandomNumberGenerator.Create();
+            var buffer = new byte[32];
+            rng.GetBytes(buffer);
+            var nonce = Convert.ToBase64String(buffer).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+            return nonce;
         }
     }
 }
