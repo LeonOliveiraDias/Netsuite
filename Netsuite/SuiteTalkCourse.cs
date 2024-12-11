@@ -19,7 +19,78 @@ namespace Netsuite
         static void Main(string[] args)
         {
             SuiteTalkCourse suiteTalkCourse = new SuiteTalkCourse();
-            suiteTalkCourse.GetEmployee();
+            //suiteTalkCourse.GetEmployee();
+            //suiteTalkCourse.createEmployee();
+            //suiteTalkCourse.updateEmployee();
+            //suiteTalkCourse.deleteEmployee()
+            //suiteTalkCourse.GetFile();
+            //suiteTalkCourse.getEmployees();
+            //suiteTalkCourse.updateEmployees();
+            //suiteTalkCourse.getCustomers();
+            suiteTalkCourse.syncEmployee();
+        }
+
+        private void syncEmployee()
+        {
+            Employee employee = new Employee
+            {
+                externalId = "EMP001",
+                firstName = "Baruch",
+                lastName = "Simmons",
+                email = "info@livingwaters.com",
+                phone = "111-111",
+                subsidiary = new RecordRef { internalId = "17" },
+                supervisor = new RecordRef { internalId = "15" },
+                customForm = new RecordRef { internalId = "-10" }
+            };
+
+            WriteResponse writeResponse = _service.upsert(employee);
+
+            if (writeResponse.status.isSuccess)
+            {
+                Console.WriteLine("Sync Employee success");
+            }
+            else
+            {
+
+                Console.WriteLine("Sync Employee failed");
+                displyError(writeResponse.status.statusDetail);
+            }
+        }
+
+        private void getCustomers() {
+            RecordRef[] customersRef = new RecordRef[] {
+                new RecordRef { 
+                    internalId = "1264",
+                    type = RecordType.customer,
+                    typeSpecified = true,
+                },
+                new RecordRef {
+                    internalId = "325",
+                    type = RecordType.customer,
+                    typeSpecified = true,
+                }
+            };
+
+            ReadResponseList readResponseList = _service.getList(customersRef);
+
+            foreach (ReadResponse response in readResponseList.readResponse) {
+                if (response.status.isSuccess)
+                {
+                    Console.WriteLine("\nGet customers success");
+                    
+                    Customer customer = (Customer)response.record;
+
+                    if (customer.currency != null) {
+                        RecordRef currency = customer.currency;
+
+                        Console.WriteLine("Currency: {0}", currency.name);
+                    }
+                }
+                else {
+                    displyError(response.status.statusDetail);
+                }
+            }
         }
 
         private void SetTokenPassport() {
@@ -38,7 +109,7 @@ namespace Netsuite
 
             string signature = GetRfc2104CompliantSignature(baseString, key);
 
-            Console.WriteLine("timestamp String:");
+            /*Console.WriteLine("timestamp String:");
             Console.WriteLine(timestamp);
             Console.WriteLine("nonce String:");
             Console.WriteLine(nonce);
@@ -47,7 +118,7 @@ namespace Netsuite
             Console.WriteLine("Key:");
             Console.WriteLine(key);
             Console.WriteLine("Signature:");
-            Console.WriteLine(signature);
+            Console.WriteLine(signature);*/
 
             TokenPassportSignature sign = new TokenPassportSignature();
             sign.algorithm = "HMAC-SHA256";
@@ -82,11 +153,219 @@ namespace Netsuite
 
             ReadResponse response = _service.get(employeeRef);
 
+            if (response.status.isSuccess)
+            {
+                Console.WriteLine("Get Employee success");
+
+                string department = null;
+
+                Employee employee = (Employee) response.record;
+
+                if (employee.department != null)
+                {
+                    department = employee.department.name;
+                }
+                else {
+                    department = "N/A";
+                }
+
+                Console.WriteLine("First Name: {0}", employee.firstName);
+                Console.WriteLine("Last Name: {0}", employee.lastName);
+                Console.WriteLine("Phone: {0}", employee.phone ?? "N/A");
+                Console.WriteLine("Email: {0}", employee.email);
+                Console.WriteLine("Job title: {0}", employee.title);
+                Console.WriteLine("Departement: {0}", department);
+            }
+            else {
+                Console.WriteLine("Get Employee failed");
+                displyError(response.status.statusDetail);
+            }
+        }
+
+        private void getEmployees() {
+            RecordRef[] employeeRefs = new RecordRef[] {
+                new RecordRef { 
+                    internalId = "187",
+                    type = RecordType.employee, 
+                    typeSpecified = true,
+                },
+                new RecordRef {
+                    internalId = "1257",
+                    type = RecordType.employee,
+                    typeSpecified = true,
+                },
+                new RecordRef {
+                    internalId = "9999999999999999999999",
+                    type = RecordType.employee,
+                    typeSpecified = true,
+                }
+            };
+
+            ReadResponseList responseList = _service.getList(employeeRefs);
+
+            foreach (ReadResponse readResponse in responseList.readResponse) {
+                if (readResponse.status.isSuccess)
+                {
+                    Console.WriteLine("\nGet Employee success");
+
+                    string department = null;
+
+                    Employee employee = (Employee)readResponse.record;
+
+                    if (employee.department != null)
+                    {
+                        department = employee.department.name;
+                    }
+                    else
+                    {
+                        department = "N/A";
+                    }
+
+                    Console.WriteLine("First Name: {0}", employee.firstName);
+                    Console.WriteLine("Last Name: {0}", employee.lastName);
+                    Console.WriteLine("Phone: {0}", employee.phone ?? "N/A");
+                    Console.WriteLine("Email: {0}", employee.email);
+                    Console.WriteLine("Job title: {0}", employee.title);
+                    Console.WriteLine("Departement: {0}", department);
+                }
+                else
+                {
+                    Console.WriteLine("Get Employees failed");
+                    displyError(readResponse.status.statusDetail);
+                }
+            }
+        }
+
+        private void createEmployee() {
+            Employee employee = new Employee {
+                firstName = "Raymond",
+                lastName = "Comfort",
+                email = "info@livingwaters.com",
+                phone = "555-555",
+                subsidiary = new RecordRef { internalId = "17" },
+                supervisor = new RecordRef { internalId = "15" }
+            };
+
+            WriteResponse writeResponse = _service.add(employee);
+
+            if (writeResponse.status.isSuccess)
+            {
+                Console.WriteLine("Add Employee success");
+            }
+            else {
+
+                Console.WriteLine("Add Employee failed");
+                displyError(writeResponse.status.statusDetail);
+            }
+        }
+
+        private void updateEmployee()
+        {
+            Employee employee = new Employee {
+                internalId = "1257",
+                externalId = "EMP001",
+                //firstName = "Ray",
+                nullFieldList = new String[] { "supervisor", "email" },
+                customForm = new RecordRef { internalId = "-10" }
+            };
+
+
+            WriteResponse writeResponse = _service.update(employee);
+
+            if (writeResponse.status.isSuccess)
+            {
+                Console.WriteLine("Update Employee success");
+                
+                RecordRef employeeRef = (RecordRef)writeResponse.baseRef;
+
+                Console.WriteLine("Internal ID: {0}", employeeRef.internalId);
+            }
+            else
+            {
+
+                Console.WriteLine("Update Employee failed");
+                displyError(writeResponse.status.statusDetail);
+            }
+        }
+
+        private void updateEmployees() {
+            RecordRef customFormRef = new RecordRef { internalId = "-10" };
+            Employee[] employees = new Employee[] { 
+                new Employee() { 
+                    internalId = "1257",
+                    fax = "555-555",
+                    customForm = customFormRef
+                },
+                new Employee() {
+                    internalId = "187",
+                    fax = "555-555",
+                    customForm = customFormRef
+                },
+                new Employee() {
+                    internalId = "999999999999999",
+                    fax = "555-555",
+                    customForm = customFormRef
+                }
+            };
+
+            WriteResponseList writeResponseList = _service.updateList(employees);
+
+            foreach (WriteResponse writeResponse in writeResponseList.writeResponse) {
+                if (writeResponse.status.isSuccess)
+                {
+                    Console.WriteLine("Update Employee success");
+
+                    RecordRef employeeRef = (RecordRef)writeResponse.baseRef;
+
+                    Console.WriteLine("Internal ID: {0}", employeeRef.internalId);
+                }
+                else
+                {
+
+                    Console.WriteLine("Update Employee failed");
+                    displyError(writeResponse.status.statusDetail);
+                }
+            }
+        }
+
+        private void deleteEmployee() {
+            RecordRef employeeRef = new RecordRef { 
+                internalId = "1662", 
+                type = RecordType.employee, 
+                typeSpecified = true 
+            };
+
+            WriteResponse response = _service.delete(employeeRef, null);
+
             if (response.status.isSuccess) {
-                Employee employee = (Employee)response.record;
-                Console.WriteLine("Employee Name: " + employee.firstName + " " + employee.lastName);
-                Console.WriteLine("Get success");
-            } 
+                Console.WriteLine("Delete Employee Success");
+            }
+            else
+            {
+                displyError(response.status.statusDetail);
+            }
+
+
+        }
+
+        private void GetFile() {
+            RecordRef fileRef = new RecordRef
+            {
+                internalId = "2442",
+                type = RecordType.file,
+                typeSpecified = true,
+            };
+
+            Console.WriteLine(fileRef);
+
+            ReadResponse response = _service.get(fileRef);
+
+            if (response.status.isSuccess) { 
+                File file = (File)response.record;
+                Console.WriteLine("File Name: " + file.name + "\n" + "File Size: " + file.fileSize);
+                Console.WriteLine("Get File success");
+            }
+
         }
 
         private static string GetBaseString(string account, string consumerKey, string tokenId, string nonce, long timestamp)
@@ -124,6 +403,15 @@ namespace Netsuite
             rng.GetBytes(buffer);
             var nonce = Convert.ToBase64String(buffer).TrimEnd('=').Replace('+', '-').Replace('/', '_');
             return nonce;
+        }
+
+        private static void displyError(StatusDetail[] statusDetails) {
+            foreach (StatusDetail statusDetail in statusDetails)
+            {
+                Console.WriteLine("Type: {0}", statusDetail.type);
+                Console.WriteLine("Code: {0}", statusDetail.code);
+                Console.WriteLine("Message: {0}", statusDetail.message);
+            }
         }
     }
 }
