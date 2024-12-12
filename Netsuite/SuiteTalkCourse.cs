@@ -27,7 +27,77 @@ namespace Netsuite
             //suiteTalkCourse.getEmployees();
             //suiteTalkCourse.updateEmployees();
             //suiteTalkCourse.getCustomers();
-            suiteTalkCourse.syncEmployee();
+            //suiteTalkCourse.syncEmployee();
+            suiteTalkCourse.getExpenseReport();
+            //suiteTalkCourse.updateExpenseReport();
+
+        }
+
+        private void updateExpenseReport() {
+            ExpenseReport expenseReport = new ExpenseReport {
+                internalId = "21839",
+                expenseList = new ExpenseReportExpenseList {
+                    replaceAll = false,
+                    expense = new ExpenseReportExpense[] { 
+                        new ExpenseReportExpense { 
+                            line = 2,
+                            lineSpecified = true,
+                            foreignAmount = 500,
+                            foreignAmountSpecified = true,
+                            currency = new RecordRef {
+                                internalId = "6",
+                                type = RecordType.currency,
+                                typeSpecified = true,
+                            },
+                            category = new RecordRef {
+                                internalId = "8",
+                            }
+
+                        }
+                    }
+                }
+            };
+
+            WriteResponse writeResponse = _service.update(expenseReport);
+
+            if (writeResponse.status.isSuccess)
+            {
+                Console.WriteLine("Expense Report Success");
+            }
+            else {
+                Console.WriteLine("Expense Report Failed");
+                displyError(writeResponse.status.statusDetail);
+            }
+        }
+
+        private void getExpenseReport() {
+            RecordRef expRepRef = new RecordRef { 
+                internalId = "21839",
+                type = RecordType.expenseReport,
+                typeSpecified = true,
+            };
+
+            ReadResponse readResponse = _service.get(expRepRef);
+
+            if (readResponse.status.isSuccess)
+            {
+                Console.WriteLine("Get Expense success");
+
+                ExpenseReport expRep = (ExpenseReport)readResponse.record;
+                Console.WriteLine("Expense ID: {0}", expRep.internalId);
+                Console.WriteLine("Employee Name: {0}", expRep.entity.name);
+
+                foreach (ExpenseReportExpense expLines in expRep.expenseList.expense) {
+
+                    Console.WriteLine("\nLine: {0}", expLines.line);
+                    Console.WriteLine("Expense Category: {0}", expLines.category.name);
+                    Console.WriteLine("Expense Amount: {0}", expLines.amount);
+                    Console.WriteLine("Expense Currency: {0}", expLines.currency.name);
+                }
+            }
+            else {
+                displyError(readResponse.status.statusDetail);
+            }
         }
 
         private void syncEmployee()
