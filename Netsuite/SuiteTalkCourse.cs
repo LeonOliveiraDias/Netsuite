@@ -20,17 +20,117 @@ namespace Netsuite
         {
             SuiteTalkCourse suiteTalkCourse = new SuiteTalkCourse();
             //suiteTalkCourse.GetEmployee();
+            //suiteTalkCourse.getEmployees();
+            //suiteTalkCourse.syncEmployee();
             //suiteTalkCourse.createEmployee();
             //suiteTalkCourse.updateEmployee();
             //suiteTalkCourse.deleteEmployee()
-            //suiteTalkCourse.GetFile();
-            //suiteTalkCourse.getEmployees();
             //suiteTalkCourse.updateEmployees();
+            //suiteTalkCourse.GetFile();
             //suiteTalkCourse.getCustomers();
-            //suiteTalkCourse.syncEmployee();
-            suiteTalkCourse.getExpenseReport();
+            //suiteTalkCourse.getExpenseReport();
             //suiteTalkCourse.updateExpenseReport();
+            //suiteTalkCourse.getPerfomanceReview();
+            suiteTalkCourse.addPerfReview();
 
+        }
+
+
+        private void addPerfReview() {
+            CustomRecord perfReview = new CustomRecord
+            {
+                name = "Monthly Review",
+                recType = new RecordRef { internalId = "106" },
+                customFieldList = new CustomFieldRef[] {
+                    new SelectCustomFieldRef() {
+                        scriptId = "custrecord_sdr_perf_subordinate",
+                        value = new ListOrRecordRef { internalId = "640"}
+                    },
+                    new DateCustomFieldRef() {
+                        internalId = "custrecord_sdr_perf_date",
+                        value = DateTime.Now
+                    },
+                    new SelectCustomFieldRef() {
+                        scriptId = "custrecord_sdr_perf_review_type",
+                        value = new ListOrRecordRef { internalId = "1"}
+                    },
+                    new BooleanCustomFieldRef() { 
+                        internalId = "custrecord_sdr_perf_obj_met",
+                        value = true
+                    },
+                    new StringCustomFieldRef() { 
+                        internalId = "custrecord_sdr_perf_rating_code",
+                        value = "A"
+                    },
+                    new DoubleCustomFieldRef() { 
+                        internalId = "custrecord_sdr_perf_sal_incr_amt",
+                        value = 300
+                    },
+                    new StringCustomFieldRef() { 
+                        internalId = "custrecord_sdr_perf_supervisor_comments",
+                        value = "Great Promotion"
+                    }
+                }
+            };
+
+            WriteResponse writeResponse = _service.add(perfReview);
+
+            if (writeResponse.status.isSuccess)
+            {
+                Console.WriteLine("Add Perfomance Review success");
+            }
+            else
+            {
+                Console.WriteLine("Add Perfomance Review failed");
+                displyError(writeResponse.status.statusDetail);
+            }
+        }
+        private void getPerfomanceReview() { 
+            CustomRecordRef prefRevRef = new CustomRecordRef { 
+                internalId = "2",
+                typeId = "106",
+            };
+
+            ReadResponse readResponse = _service.get(prefRevRef);
+
+            if (readResponse.status.isSuccess)
+            {
+                Console.WriteLine("Get Perfomance Review Success");
+
+                CustomRecord perReview = (CustomRecord)readResponse.record;
+                string subordinate = "";
+                string reviewType = "";
+                double incrAmt = 0;
+
+                foreach (CustomFieldRef customFieldRef in perReview.customFieldList)
+                {
+                    if (customFieldRef.scriptId == "custrecord_sdr_perf_subordinate") { 
+                        SelectCustomFieldRef subordinateRef = (SelectCustomFieldRef)customFieldRef;
+                        subordinate = subordinateRef.value.name;
+                    }
+
+                    if (customFieldRef.scriptId == "custrecord_sdr_perf_review_type")
+                    {
+                        SelectCustomFieldRef reviewTypeRef = (SelectCustomFieldRef)customFieldRef;
+                        reviewType = reviewTypeRef.value.name;
+                    }
+
+                    if (customFieldRef.scriptId == "custrecord_sdr_perf_sal_incr_amt")
+                    {
+                        DoubleCustomFieldRef incrAmtRef = (DoubleCustomFieldRef)customFieldRef;
+                        incrAmt = incrAmtRef.value; 
+                    }
+                }
+
+                Console.WriteLine("Name: {0}", perReview.name);
+                Console.WriteLine("Subordinate: {0}", subordinate);
+                Console.WriteLine("Review Type: {0}", reviewType);
+                Console.WriteLine("Increase Amount: {0}", incrAmt);
+            }
+            else {
+                Console.WriteLine("Get Perfomance Review Failed");
+                displyError(readResponse.status.statusDetail);
+            }
         }
 
         private void updateExpenseReport() {
@@ -245,6 +345,14 @@ namespace Netsuite
                 Console.WriteLine("Email: {0}", employee.email);
                 Console.WriteLine("Job title: {0}", employee.title);
                 Console.WriteLine("Departement: {0}", department);
+
+                foreach (CustomFieldRef customFieldRef in employee.customFieldList) {
+                    if (customFieldRef.scriptId.Equals("custentity_sdr_it_proficiency")) {
+                        SelectCustomFieldRef itProfFldRef = (SelectCustomFieldRef) customFieldRef;
+
+                        Console.WriteLine("IT Proficiency : {0}", itProfFldRef.value.name);
+                    }
+                }
             }
             else {
                 Console.WriteLine("Get Employee failed");
