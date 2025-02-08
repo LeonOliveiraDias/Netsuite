@@ -31,10 +31,221 @@ namespace Netsuite
             //suiteTalkCourse.getExpenseReport();
             //suiteTalkCourse.updateExpenseReport();
             //suiteTalkCourse.getPerfomanceReview();
-            suiteTalkCourse.addPerfReview();
+            //suiteTalkCourse.addPerfReview();
+            //suiteTalkCourse.searchEmployees();
+            //suiteTalkCourse.executeSavedSearch();
+            suiteTalkCourse.searchEmployeesWithPages();
 
         }
 
+        private void searchEmployeesWithPages() {
+            EmployeeSearchBasic employeeSearchBasic = new EmployeeSearchBasic
+            {
+                email = new SearchStringField
+                {
+                    searchValue = "software.com",
+                    @operator = SearchStringFieldOperator.hasKeywords,
+                    operatorSpecified = true,
+                }
+            };
+
+            SearchResult searchResult = _service.search(employeeSearchBasic);
+
+            if (searchResult.status.isSuccess)
+            {
+                Console.WriteLine("Search Emplyee Success");
+                Console.WriteLine("Total Records: {0}", searchResult.totalRecords);
+                Console.WriteLine("Page: {0}", searchResult.pageIndex);
+
+                int totalPages = searchResult.totalPages;
+                int pageIndex = searchResult.pageIndex;
+                string searchId = searchResult.searchId;
+
+                foreach (Employee employee in searchResult.recordList)
+                {
+                    string department = null;
+                    if (employee.department != null)
+                    {
+                        department = employee.department.name;
+                    }
+                    else
+                    {
+                        department = "N/A";
+                    }
+
+                    Console.WriteLine("First Name: {0}", employee.firstName);
+                    Console.WriteLine("Last Name: {0}", employee.lastName);
+                    Console.WriteLine("Phone: {0}", employee.phone ?? "N/A");
+                    Console.WriteLine("Email: {0}", employee.email);
+                    Console.WriteLine("Job title: {0}", employee.title);
+                    Console.WriteLine("Departement: {0}", department);
+                }
+
+                for (int i = pageIndex;  i < totalPages;  i++)
+                {
+                    searchResult = _service.searchMoreWithId(searchId, i + 1);
+
+                    Console.WriteLine("Page: {0}", searchResult.pageIndex);
+
+                    if (searchResult.status.isSuccess)
+                    {
+                        foreach (Employee employee in searchResult.recordList)
+                        {
+                            string department = null;
+                            if (employee.department != null)
+                            {
+                                department = employee.department.name;
+                            }
+                            else
+                            {
+                                department = "N/A";
+                            }
+
+                            Console.WriteLine("First Name: {0}", employee.firstName);
+                            Console.WriteLine("Last Name: {0}", employee.lastName);
+                            Console.WriteLine("Phone: {0}", employee.phone ?? "N/A");
+                            Console.WriteLine("Email: {0}", employee.email);
+                            Console.WriteLine("Job title: {0}", employee.title);
+                            Console.WriteLine("Departement: {0}", department);
+                        }
+                    }
+                    else {
+                        displyError(searchResult.status.statusDetail);
+                    }
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Search Emplyee Failed");
+                displyError(searchResult.status.statusDetail);
+            }
+        }
+
+        private void executeSavedSearch() {
+            EmployeeSearchAdvanced employeeSearchAdvanced = new EmployeeSearchAdvanced { 
+                savedSearchScriptId = "customsearch_sdr_emp_softwarecom_email",
+                criteria = new EmployeeSearch { 
+                    basic = new EmployeeSearchBasic { 
+                        title = new SearchStringField { 
+                            @operator = SearchStringFieldOperator.notEmpty,
+                            operatorSpecified = true,
+                        }
+                    }
+                },
+
+                columns = new EmployeeSearchRow { 
+                    basic = new EmployeeSearchRowBasic { 
+                        entityId = new SearchColumnStringField[] { 
+                            new SearchColumnStringField()
+                        },
+                        title = new SearchColumnStringField[] { 
+                            new SearchColumnStringField()
+                        }
+                    }
+                }
+            };
+
+            SearchResult searchResult = _service.search(employeeSearchAdvanced);
+
+            if (searchResult.status.isSuccess)
+            {
+                Console.WriteLine("Advanced Saved Search Execution Success");
+                Console.WriteLine("Total Records: {0}", searchResult.totalRecords);
+
+                foreach (EmployeeSearchRow empSearchRow in searchResult.searchRowList)
+                {
+                    string name = empSearchRow.basic.entityId[0].searchValue;
+                    string email = null;
+                    string title = null;
+
+                    if (empSearchRow.basic.email != null) {
+                        email = empSearchRow.basic.email[0].searchValue.ToString();
+                    } else {
+                        email = "<none>";
+                    }
+
+                    if (empSearchRow.basic.title != null)
+                    {
+                        title = empSearchRow.basic.title[0].searchValue.ToString();
+                    }
+                    else
+                    {
+                        title = "<none>";
+                    }
+
+                    Console.WriteLine("Name: {0}", name);
+                    Console.WriteLine("Job Title: {0}", title);
+                    /* Console.WriteLine("Email: {0}", email);
+                     Console.WriteLine("Supervisor Id: {0}", supervisorId);*/
+                    Console.WriteLine("-------------------------");
+                }
+            }
+            else {
+                Console.WriteLine("Advanced Saved Search Execution Field");
+                displyError(searchResult.status.statusDetail);
+            }
+        }
+
+        private void searchEmployees() {
+            EmployeeSearchBasic employeeSearchBasic = new EmployeeSearchBasic
+            {
+                email = new SearchStringField
+                {
+                    searchValue = "software.com",
+                    @operator = SearchStringFieldOperator.hasKeywords,
+                    operatorSpecified = true,
+                }
+            };
+
+            TransactionSearchBasic transactionSearchBasic = new TransactionSearchBasic { 
+                type = new SearchEnumMultiSelectField { 
+                    searchValue = new string[] { "_expenseReport" },
+                    @operator = SearchEnumMultiSelectFieldOperator.anyOf,
+                    operatorSpecified = true,
+                }
+            };
+
+            EmployeeSearch employeeSearch = new EmployeeSearch
+            {
+                basic = employeeSearchBasic,
+                transactionJoin = transactionSearchBasic,
+            };
+
+            SearchResult searchResult = _service.search(employeeSearch);
+
+            if (searchResult.status.isSuccess)
+            {
+                Console.WriteLine("Search Emplyee Success");
+                Console.WriteLine("Total Records: {0}", searchResult.totalRecords);
+
+                foreach (Employee employee in searchResult.recordList)
+                {
+                    string department = null;
+                    if (employee.department != null)
+                    {
+                        department = employee.department.name;
+                    }
+                    else
+                    {
+                        department = "N/A";
+                    }
+
+                    Console.WriteLine("First Name: {0}", employee.firstName);
+                    Console.WriteLine("Last Name: {0}", employee.lastName);
+                    Console.WriteLine("Phone: {0}", employee.phone ?? "N/A");
+                    Console.WriteLine("Email: {0}", employee.email);
+                    Console.WriteLine("Job title: {0}", employee.title);
+                    Console.WriteLine("Departement: {0}", department);
+
+                }
+
+            }
+            else {
+                Console.WriteLine("Search Emplyee Failed");
+                displyError(searchResult.status.statusDetail);
+            }
+        }
 
         private void addPerfReview() {
             CustomRecord perfReview = new CustomRecord
@@ -308,7 +519,10 @@ namespace Netsuite
 
         private void SetPreferences() {
             _service.preferences = new Preferences { };
-            _service.searchPreferences = new SearchPreferences { };
+            _service.searchPreferences = new SearchPreferences { 
+                pageSize = 10,
+                pageSizeSpecified = true,
+            };
         }
 
         private void GetEmployee() {
